@@ -3,8 +3,8 @@ This is a toy project that executes a ROS2 program w/ Gazebo and Nav2, while aim
 
 ## Usage
 1. Open WSL window
-2. cd to this repo
-3. docker compose up --build
+2. `cd` to this folder
+3. `docker compose up --build`
 
 ## Result
 A Gazebo window and a RViz window showing the SLAM visualizations.
