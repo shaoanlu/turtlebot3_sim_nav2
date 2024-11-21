@@ -1,0 +1,60 @@
+version: "3.8"
+services:
+  turtlebot3:
+    build: .
+    container_name: turtlebot3_sim
+    environment:
+      # Needed to define a TurtleBot3 model type
+      - TURTLEBOT3_MODEL=burger
+      # Allows graphical programs in the container.
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models
+    volumes:
+      # Allows graphical programs in the container.
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+    networks:
+      - ros_network
+    devices:
+      - /dev/dri:/dev/dri
+    command: >
+      bash -c "source /opt/ros/humble/setup.bash &&
+               source /usr/share/gazebo/setup.bash &&
+               ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py"
+
+  nav2:
+    build: .
+    container_name: nav2_controller
+    environment:
+      - TURTLEBOT3_MODEL=burger
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/opt/ros/humble/share/turtlebot3_gazebo/models
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
+    networks:
+      - ros_network
+    depends_on:
+      - turtlebot3
+    command: >
+      bash -c "source /opt/ros/humble/setup.bash &&
+               ros2 launch turtlebot3_navigation2 navigation2.launch.py use_sim_time:=True slam:=True"
+  
+  auto_navigation:
+    build: .
+    container_name: auto_navigation
+    networks:
+      - ros_network
+    depends_on:
+      - nav2
+    command: >
+      bash -c "source /opt/ros/humble/setup.bash &&
+               python3 /app/scripts/auto_navigation.py"
+
+networks:
+  ros_network:
+    driver: bridge
