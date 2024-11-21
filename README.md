@@ -12,7 +12,7 @@ A Gazebo window and a RViz window showing the SLAM visualizations.
 ## Problems encountered
 ### 1. Gazebo window not showing up (but a black box shown) after `ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py` 
 ### Sol.
-In docker compose yaml, add the following config
+In docker compose yaml, add the following configs
 ```yaml
     environment:
       # Needed to define a TurtleBot3 model type
