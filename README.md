@@ -20,9 +20,9 @@ docker compose build
 3. Run the containers
 ```bash
 # Containers
-#    turtlebot3_sim: the robot simulator
-#    nav_controller: controller based on nav2 (turtlebot3-navigation2)
-#    auto_navigation: a ROS2 node that randomly publish goal position for the robot to follow
+#    turtlebot3_sim: The robot simulator
+#    nav_controller: Controller based on nav2 (turtlebot3-navigation2)
+#    auto_navigation: A ROS2 node that randomly publishes goal positions for the robot to follow.
 docker compoer up
 ```
 4. (Optional) Stop the container
