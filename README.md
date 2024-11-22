@@ -1,18 +1,48 @@
+# TurtleBot3 Navigation in Gazebo using ROS2 and Docker
 ## About
-This is a toy project that executes a ROS2 program w/ Gazebo and Nav2, while aiming for **minimum installation effort required**.
+This project demonstrates autonomous navigation of a TurtleBot3 in a Gazebo simulation using ROS2 and Navigation 2 (Nav2). The primary goal is to minimize setup complexity while maintaining minimal functionality.
 
-## Usage
-1. Open WSL window
-2. `cd` to this folder
-3. `docker compose up --build`
+## Prerequisites
+- Ubuntu 22.04+
+- Docker and Docker Compose installed (follow the [official guilde](https://docs.docker.com/engine/install/ubuntu/))
+- (Optional) If you're using an NVIDIA GPU, ensure the NVIDIA Container Toolkit is installed for hardware acceleration. Refer to the [NVIDIA Container Toolkit guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html).
 
-## Result
-A Gazebo window and a RViz window showing the SLAM visualizations.
+## Setup
+1. clone the repository and navigate to the project folder
+```bash
+git clone https://github.com/shaoanlu/turtlebot3_sim_nav2.git
+cd turtlebot3_sim_nav2
+```
+2. Build the Docker image
+```bash
+docker compose build
+```
+3. Run the containers
+```bash
+# Containers
+#    turtlebot3_sim: the robot simulator
+#    nav_controller: controller based on nav2 (turtlebot3-navigation2)
+#    auto_navigation: a ROS2 node that randomly publish goal position for the robot to follow
+docker compoer up
+```
+4. (Optional) Stop the container
+```bash
+docker compoer stop
+```
 
-## Problems encountered
-### 1. Gazebo window not showing up (but a black box shown) after `ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py` 
-### Sol.
-In docker compose yaml, add the following configs
+## Execution Results
+The following animation demonstrates the execution of the project:
+- The Gazebo window displays the TurtleBot3 robot navigating in the standard simulation world.
+- The RViz window visualizes the SLAM map and the navigation progress.
+
+![](assets/demo_tb3_gz_nav2.gif)
+
+## Problems Encountered and Solutions
+### 1. Gazebo Window Does Not Display Properly
+Encounter a black screen or no Gazebo window after running `ros2 launch turtlebot3_gazebo turtlebot3_world.launch.py`
+
+#### Solution: Update docker-compose.yaml Configuration
+Add the following environment variables and volumes to enable graphical support in Docker:
 ```yaml
     environment:
       # Needed to define a TurtleBot3 model type
@@ -27,7 +57,7 @@ In docker compose yaml, add the following configs
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY:-$HOME/.Xauthority}:/root/.Xauthority
 ```
-and source gazebo setup file
+and ensure the command includes the necessary Gazebo setup sourcing:
 ```yaml
     command: >
       bash -c "source /opt/ros/humble/setup.bash &&

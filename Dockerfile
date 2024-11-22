@@ -18,5 +18,5 @@ ENV TURTLEBOT3_MODEL=burger
 WORKDIR /app
 COPY scripts /app/scripts
 
-# Add a default command to source ROS 2 setup and launch the application
+# Add a default command to source ROS 2 setup
 CMD ["bash", "-c", "source /opt/ros/humble/setup.bash && source /usr/share/gazebo/setup.bash"]
